@@ -1,10 +1,49 @@
 # map()함수
 
 ## 파이썬 map()함수란?
-: 각 요소들에 특정한 함수를 적용시킬 때 쓰는 함수이다.
+: 각 요소들에 특정한 함수를 적용시킬 때 쓰는 함수이다.  
+: 첫 번째 인자(input)으로 함수를 받아서   
+: 두 번째 인자(input)인 반복 가능한 객체의 모든 요소에 적용!
 
 ## map()을 왜 쓸까:question:
-: 1개의 입력이 아니라, 여러개가 입력된 경우 각각의 요소들에 대해 특정한 함수를 적용시키고 싶을 때
+: 1개의 입력이 아니라, 여러개가 입력된 경우 각각의 요소들에 대해 특정한 함수를 적용시키고 싶을 때 ['1','2']->[1, 2] 각각의 '1', '2'를 변환  
+
+## map 흐름
+1. 문자열을 각각 쪼갠 요소를 가진 리스트 변환
+```python
+# a = 숫자 2 5를 원한다.
+a = input()
+print (a) # '2 5'를 원한다.
+
+b = a.split() #['2', '5'] -> 2와 5를 쪼개줌
+```
+`input().split까지는 리스트다`  
+
+2. 각 요소를 숫자로 변환 -> map()
+```python
+c = map(int, b)
+print(C) # ~map...어쩌구나옴
+```
+3. 각각 변수에 저장
+```python
+d, e = list(c) # list(c)가 [2, 5]
+print(d, e) # 각각 2, 5
+```
+- 위 과정을 모두 합치면
+```python
+d, e = list(map(int, input().split()))
+#여기서 list는 생략가능
+d, e = map(int, input().split())
+# 2 5
+```
+## 결론 int로 바꾸고 싶으면
+ ```python
+ numbers = list(map(int, input().split()))
+ # 첫 번째꺼 d에 넣고 싶으면
+ d = numbers[0]
+ # 두 번째꺼 e에 넣고 싶으면
+ e = numbers[1]
+ ```
 
 ## int로 적용 시키고 싶은 경우
 - 입력 : 1 2 3 4 5
@@ -28,6 +67,28 @@ print(a, b, c, d, e)
 a =list(map(int, input().split()))
 print(a)
 # [1, 2, 3, 4, 5]
+```
+### 2. case
+: 리스트의 합을 구하고 싶다.
+```python
+a = ['1', '2', '3']
+result = 0
+for n in a:
+  result += int(a)
+print(result) #6
+```
+```python
+n = ['1', '2', '3']
+new = []
+for a in n:
+  new.append(int(a))
+print(new) # [1, 2, 3]
+```
+```python
+n = ['1', '2', '3']
+new_n = map(int, n)
+print(list(n))
+# [1, 2, 3] 위의 코딩의 값을 한줄로 표시 가능
 ```
 
 ## :question: split() 함수로 문자열 분리가 가능하다. 그럼 input()과 다른 점은?
