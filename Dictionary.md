@@ -93,7 +93,7 @@ print(tmp) # d
 dic = {'a':0, 'b':1, 'c':2, 'd':3}
 
 >>> 리스트 컴프리헨션 이용
-tmp = [key for key, value in dic.items() if max(dic.values()) == v]
+tmp = [key for key, value in dic.items() if max(dic.values()) == value]
 print(tmp) # ['c', 'd']
 ```
 
