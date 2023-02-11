@@ -95,6 +95,12 @@ dic = {'a':0, 'b':1, 'c':2, 'd':3}
 >>> 리스트 컴프리헨션 이용
 tmp = [key for key, value in dic.items() if max(dic.values()) == value]
 print(tmp) # ['c', 'd']
+
+tmp = []
+for key, value in ans.items(): # 값들을 순회
+    if max(ans.values()) == value: 
+        # max인 ans의  values값들이 value의 값과 같으면 해당 value의 key를 tmp에 저장한다.
+        tmp.append(key)
 ```
 
 # value의 최대값
