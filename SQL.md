@@ -249,7 +249,7 @@ SELECT IF(IS NULL(NAME), "No name", NAME) as NAME
 FROM ANIMAL_INS
 ```
 
-# CASE
+## CASE
 ```
 CASE 
     WHEN 조건식1 THEN 식1
@@ -272,7 +272,7 @@ SELECT
 FROM ANIMAL_INS
 ```
 
-# COALESCE
+## COALESCE
 ```
 >> NULL 처리 상황
 
@@ -297,4 +297,45 @@ FROM 테이블명
 
 SELECT COALESCE(NAME, "No name")
 FROM ANIMAL_INS
+```
+
+# DATE FUNCTION (날짜 관련 함수)
+
+## DAYOFWEEK(DATE)
+- 날짜를 한 주의 몇 번째 요일인지 나타내는 숫자로 리턴한다.
+- (1 = 일요일, 2 = 월요일, ... 7 = 토요일)
+```
+SELECT DAYOFWEEK('1998-02-03')
+>>> 3
+```
+
+## DATE_FORMAT(date, format)
+- format의 정의에 따라 날짜 혹은 시간을 출력한다
+
+### format에 사용되는 문자
+    - %m : 월이름(january...december)
+    - %w : 요일명
+    - %y : 4자리 년도
+    - %a : 짧은 요일명(sun..sat)
+    - %d : 일(00 .... 31)
+    - %h : 12시 형식의 시간(01...12)
+
+## CURDATE()
+- 함수가 문자열이나 숫자로 사용되었는지 문맥에 따라서 'YYYY-MM-DD'이나 YYYYMMDD 형식으로 현재 날짜를 반환한다.
+```
+SELECT CURDATE();
+>> '2023-02-15'
+
+SELECT CURDATE() + 0;
+>> 20230215
+```
+
+## CURTIME()
+- 함수가 문자열이나 숫자로 사용되었는지 문맥에 따라서 'HH:MM:SS'이나 HHMMSS 형식으로 현재 시간을 반환한다.
+```
+SELECT CURTIME();
+>>'23:20:14'
+
+SELECT CURTIME() + 0;
+>>232014
 ```
