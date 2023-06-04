@@ -1,4 +1,6 @@
 # Session
+- 웹 브라우저와 서버가 HTTP 프로토콜을 통해서 하는 모든 커뮤니케이션은 `무상태(stateless)라고 한다. 즉 프로토콜이 무상태라는 뜻은 클라이언트와 서버 사이의 메시지가 완벽하게 각각 독립적이라는 뜻이다. 결국 만약 사이트가 클라이언트와 계속적인 관계를 유지하는 것을 원하면 내가 그 작업을 해야한다.
+- 세션이라는 것은 Django 그리고 대부분의 인터넷에서 사용되는 메카니즘으로, 사이트와 특정 브라우저 사이의 `"state"를 유지`시키는 것이다. `세션`은 당신이 매 브라우저마다 `임의의 데이터를 저장`하게 하고, 이 데이터가 브라우저에 접속할 때 마다 사이트에서 활용될 수 있도록 합니다. 세션에 연결된 각각의 데이터 아이템들은 `"key"에 의해 인용`되고, 이는 `또다시 데이터를 찾거나 저장하는 데에 이용`됩니다.
 - 클라이언트 별 정보를 브라우저가 아닌 웹 서버에 저장하는 것이다.
 - 클라이언트의 정보를 웹 브라우저에 저장하는 기술을 `cookie`
 - `django`의 `session`은 쿠키에는 `sessionld`만을 저장하며, 클라이언트와 웹 서버 간의 연결성을 확보한 뒤 `sessionld`를 통해 커뮤니케이션을 실행한다.
@@ -16,9 +18,45 @@
 6. 클라이언트가 추가 요청을 보낼 때마다, 서버는 세션 ID를 통해 해당 클라이언트의 세션 데이터를 검색하여 사용자의 상태 및 정보를 유지합니다.
 7. 세션 데이터는 클라이언트의 요청이 완료되면 서버 측에서 관리되며, 클라이언트는 세션 ID를 저장하고 다음 요청에서 다시 전달합니다.
 
+# 세션 사용설정하기
+- 세션사용설정은 프로젝트 settings.py에서 아래와 같이 `INSTALLED_APPS` 와 `MIDDLEWARE` 부분에 있다.(default로 설정되어 있다.)
+```python
+INSTALLED_APPS = [
+    ...
+    'django.contrib.sessions',
+    ....
+]
+MIDDLEWARE = [
+    ...
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    ....
+]
+```
+- 장고는 특정 session id 를 포함하는 쿠키를 사용해서 각각의 브라우저와 사이트가 연결된 세션을 알아낸다. 실질적인 세션의 data 사이트의 Database에 기본 설정값으로 저장된다. (이는 쿠키안에 데이터를 저장하는 것보다 더 보안에 유리하고, 쿠키는 악의적인 사용자에게 취약하다).
+- Django를 다른 장소 (캐시, 파일, "보안이 된" 쿠키)에 저장하도록 설정할 수 있지만, 그러나 기본 위치가 상대적으로 더 안전하다.
+
 # 세션 사용하기
-- 세션은 장고의 `middleware` 를 통해 실행됩니다. 
-- 세션 기능을 시작하려면 `settings.py`의  MIDDLEWARE_CLASSES 에 'django.contrib.sessions.middleware.SessionMiddleware' 를 추가해줍니다. ( default로 설정되어 있다.)
+- `session` 속성은 `request` parameter에서 파생된 view 안에 있다. ( view로 전달되는 `HttpRequest`의 첫번째 함수). 이 세션의 속성은 현재의 사용자(정확히는 브라우저) 의 site 에 대한 connection 을 의미합니다. 브라우저의 cookie안에 정의 되어있다.
+- 이 `session`속성은 사전 같은 객체이지만 여러번 읽고 쓰기가 가능합니다.여러분은 다양한 딕셔너리 연산 - 즉, 모든 데이타 삭제, Key 가 존재하는지 데이터를 통한 looping 기타등등. 무엇보다 표준적인 "dictionary" API 를 통해 값을 가져오거나 저장 할 수 있다.
+- 아래 코드는 `key`값이 `"my_car"`인 데이터를 어떻게 읽고 쓰고 삭제하는지 보여준다. 물론 그 key 값은 현재의 session (브라우저와 사이트의 연결정보)과 연관되어진 key이다.
+
+- 참고: 장고가 대단한점 한가지는 여러분이 이런 session의 매카니즘에 생각하지 않게끔 한다는 점입니다. 만일 view안에 있는 아래의 code를 사용하면 오직 현재의 브라우저만이 현재의 request 에 관한 `my_car`정보를 알 수 있다는 겁니다.
+```python
+# 세션에서 'my_car'라는 키에 해당하는 값을 가져옵니다. 이 코드는 만약 해당 키가 세션에 없을 경우 KeyError를 발생시킵니다.
+my_car = request.session['my_car']
+
+# 세션에서 'my_car'라는 키에 해당하는 값을 가져옵니다. 이 코드는 만약 해당 키가 세션에 없을 경우 디폴트 값으로 'mini'를 설정합니다. 즉, 세션에 'my_car'가 없다면 my_car 변수에 'mini' 값을 할당합니다.
+my_car = request.session.get('my_car', 'mini')
+
+# 세션에서 'my_car'라는 키와 해당 값을 삭제합니다. 이 코드는 클라이언트의 세션에서 'my_car'라는 키와 해당 값이 삭제됩니다.
+request.session['my_car'] = 'mini'
+
+# 세션 값 삭제
+del request.session['my_car']
+
+```
+- 세션 사용방법
+https://docs.djangoproject.com/en/2.0/topics/http/sessions/
 
 # 세션 엔진 설정하기
 
